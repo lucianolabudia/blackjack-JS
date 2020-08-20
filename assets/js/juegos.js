@@ -52,4 +52,31 @@ const pedirCarta = () => {
     return carta;
 }
 
-pedirCarta();
+// pedirCarta();
+
+// Funcion para darle valores a las cartas
+const valorCarta = (carta) => {
+
+    // extraer el primer valor del string
+    const valor = carta.substring(0, carta.length - 1); // extrae el valor de la carta
+
+    /*
+    let puntos = 0;
+    if (isNaN(valor)) { // evalua si es un numero o no
+        // console.log('No es un numero');
+        puntos = (valor === 'A') ? 11 : 10;
+    } else {
+        // console.log('Es un numero');
+        puntos = valor * 1;
+    }
+    */
+
+    // ifelse + corto
+    return (isNaN(valor)) ?
+        (valor === 'A') ? 11 : 10 :
+        valor * 1;
+
+}
+
+const valor = valorCarta(pedirCarta());
+console.log({ valor });
