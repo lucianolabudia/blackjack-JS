@@ -14,8 +14,10 @@ let puntosJugador = 0,
 
 // Referencias del HTML
 const btnPedir = document.querySelector('#btnPedir');
+const btnDetener = document.querySelector('#btnDetener');
 
 const divCartasJugador = document.querySelector('#jugador-cartas');
+const divCartasCroupier = document.querySelector('#croupier-cartas');
 
 const puntosHTML = document.querySelectorAll('small');
 
@@ -87,6 +89,29 @@ const valorCarta = (carta) => {
 
 }
 
+// Logica o Turno de la Computadora
+const turnoCroupier = (puntosMinimos) => {
+
+    do {
+
+        const carta = pedirCarta();
+
+        puntosCroupier = puntosCroupier + valorCarta(carta);
+        puntosHTML[1].innerText = puntosCroupier;
+
+        // <img class="carta " src="assets/cartas/2C.png ">
+        const imgCarta = document.createElement('img');
+        imgCarta.src = `assets/cartas/${ carta }.png`; //3H, JD
+        imgCarta.classList.add('carta');
+        divCartasCroupier.append(imgCarta);
+
+        if (puntosMinimos > 21) {
+            break;
+        }
+
+    } while ((puntosCroupier < puntosMinimos) && (puntosMinimos <= 21));
+}
+
 // Eventos
 btnPedir.addEventListener('click', () => {
 
@@ -102,11 +127,28 @@ btnPedir.addEventListener('click', () => {
     divCartasJugador.append(imgCarta);
 
     if (puntosJugador > 21) {
+
         console.warn('Perdiste');
         btnPedir.disabled = true;
+        btnDetener.disabled = true;
+        turnoCroupier(puntosJugador);
+
     } else if (puntosJugador === 21) {
+
         console.warn('21, genial!');
         btnPedir.disabled = true;
+        btnDetener.disabled = true;
+        turnoCroupier(puntosJugador);
     }
+
+});
+
+btnDetener.addEventListener('click', () => {
+
+    // bloquea los botones
+    btnPedir.disabled = true;
+    btnDetener.disabled = true;
+
+    turnoCroupier(puntosJugador);
 
 });
