@@ -13,6 +13,7 @@ let puntosJugador = 0,
     puntosCroupier = 0;
 
 // Referencias del HTML
+const btnNuevo = document.querySelector('#btnNuevo');
 const btnPedir = document.querySelector('#btnPedir');
 const btnDetener = document.querySelector('#btnDetener');
 
@@ -110,6 +111,21 @@ const turnoCroupier = (puntosMinimos) => {
         }
 
     } while ((puntosCroupier < puntosMinimos) && (puntosMinimos <= 21));
+
+    setTimeout(() => {
+
+        if (puntosCroupier === puntosMinimos) {
+            alert('Nadie gana');
+        } else if (puntosMinimos > 21) {
+            alert('Gano el Croupier');
+        } else if (puntosCroupier > 21) {
+            alert('Ganaste!');
+        } else {
+            alert('Gano el Croupier');
+        }
+
+    }, 10);
+
 }
 
 // Eventos
@@ -150,5 +166,25 @@ btnDetener.addEventListener('click', () => {
     btnDetener.disabled = true;
 
     turnoCroupier(puntosJugador);
+
+});
+
+btnNuevo.addEventListener('click', () => {
+
+    console.clear(); // limpia la consola
+    deck = [];
+    deck = crearDeck();
+
+    puntosJugador = 0;
+    puntosCroupier = 0;
+
+    puntosHTML[0].innerText = 0;
+    puntosHTML[1].innerText = 0;
+
+    divCartasCroupier.innerHTML = '';
+    divCartasJugador.innerHTML = '';
+
+    btnPedir.disabled = false;
+    btnDetener.disabled = false;
 
 });
