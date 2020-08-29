@@ -1,27 +1,44 @@
 // Funcion anonima auto embocada
-(() => {
+const Modulo = (() => {
     'use strict' // ser estricto al evaluar el codigo
 
 
     let deck = [];
-    const tipos = ['C', 'D', 'H', 'S'];
-    const especiales = ['A', 'J', 'Q', 'K'];
+    const tipos = ['C', 'D', 'H', 'S'],
+        especiales = ['A', 'J', 'Q', 'K'];
 
-    let puntosJugador = 0,
-        puntosCroupier = 0;
+
+    let puntosJugadores = [];
 
     // Referencias del HTML
-    const btnNuevo = document.querySelector('#btnNuevo');
-    const btnPedir = document.querySelector('#btnPedir');
-    const btnDetener = document.querySelector('#btnDetener');
+    const btnNuevo = document.querySelector('#btnNuevo'),
+        btnPedir = document.querySelector('#btnPedir'),
+        btnDetener = document.querySelector('#btnDetener');
 
-    const divCartasJugador = document.querySelector('#jugador-cartas');
-    const divCartasCroupier = document.querySelector('#croupier-cartas');
+    const divCartasJugadores = document.querySelectorAll('.divCartas'),
+        puntosHTML = document.querySelectorAll('small');
 
-    const puntosHTML = document.querySelectorAll('small');
+    // Funcion que inicializa el juego
+    const inicializarJuego = (numJugadores = 2) => {
+
+        deck = crearDeck();
+
+        puntosJugadores = [];
+        for (let i = 0; i < numJugadores; i++) {
+            puntosJugadores.push(0);
+        }
+
+        puntosHTML.forEach(elem => elem.innerText = 0);
+        divCartasJugadores.forEach(elem => elem.innerText = '');
+
+        btnPedir.disabled = false;
+        btnDetener.disabled = false;
+    }
 
     // funcion que crea nueva baraja
     const crearDeck = () => {
+
+        deck = [];
 
         for (let i = 2; i <= 10; i++) {
 
@@ -38,14 +55,11 @@
         }
 
         // muestra las cartas generadas
-        // console.log(deck);
-
         // shuffle de underscore para crear cartas con orden aleatorio
-        deck = _.shuffle(deck);
-        return deck;
+        return _.shuffle(deck);
     }
 
-    crearDeck();
+
 
     // función que toma una carta
     const pedirCarta = () => {
@@ -54,14 +68,8 @@
             throw 'No hay cartas en el Mazo'; // "throw" va a mostrar un error en consola
         }
 
-        const carta = deck.pop(); // "pop" elimina el ultimo elemento del array
-
-        console.log(deck);
-        console.log(carta); // carta que es del mazo
-        return carta;
+        return deck.pop(); // "pop" elimina el ultimo elemento del array
     }
-
-    // pedirCarta();
 
     // Funcion para darle valores a las cartas
     const valorCarta = (carta) => {
@@ -87,27 +95,27 @@
 
     }
 
-    // Logica o Turno de la Computadora
-    const turnoCroupier = (puntosMinimos) => {
+    // Turno: 0 = primer jugador y el ultimo es la pc
+    const acumularPuntos = (carta, turno) => {
 
-        do {
+        puntosJugadores[turno] = puntosJugadores[turno] + valorCarta(carta);
+        puntosHTML[turno].innerText = puntosJugadores[turno];
+        return puntosJugadores[turno];
 
-            const carta = pedirCarta();
+    }
 
-            puntosCroupier = puntosCroupier + valorCarta(carta);
-            puntosHTML[1].innerText = puntosCroupier;
+    const crearCarta = (carta, turno) => {
 
-            // <img class="carta " src="assets/cartas/2C.png ">
-            const imgCarta = document.createElement('img');
-            imgCarta.src = `assets/cartas/${ carta }.png`; //3H, JD
-            imgCarta.classList.add('carta');
-            divCartasCroupier.append(imgCarta);
+        const imgCarta = document.createElement('img');
+        imgCarta.src = `assets/cartas/${ carta }.png`; // se crea la carta
+        imgCarta.classList.add('carta');
+        divCartasJugadores[turno].append(imgCarta);
 
-            if (puntosMinimos > 21) {
-                break;
-            }
+    }
 
-        } while ((puntosCroupier < puntosMinimos) && (puntosMinimos <= 21));
+    const determinarGanador = () => {
+
+        const [puntosMinimos, puntosCroupier] = puntosJugadores;
 
         setTimeout(() => {
 
@@ -121,23 +129,34 @@
                 alert('Gano el Croupier');
             }
 
-        }, 10);
+        }, 100);
 
+    }
+
+    // Logica o Turno de la Computadora
+    const turnoCroupier = (puntosMinimos) => {
+
+        let puntosCroupier = 0;
+
+        do {
+
+            const carta = pedirCarta();
+            puntosCroupier = acumularPuntos(carta, puntosJugadores.length - 1);
+            crearCarta(carta, puntosJugadores.length - 1);
+
+
+        } while ((puntosCroupier < puntosMinimos) && (puntosMinimos <= 21));
+
+        determinarGanador();
     }
 
     // Eventos
     btnPedir.addEventListener('click', () => {
 
         const carta = pedirCarta();
+        const puntosJugador = acumularPuntos(carta, 0);
 
-        puntosJugador = puntosJugador + valorCarta(carta);
-        puntosHTML[0].innerText = puntosJugador;
-
-        // <img class="carta " src="assets/cartas/2C.png ">
-        const imgCarta = document.createElement('img');
-        imgCarta.src = `assets/cartas/${ carta }.png`; //3H, JD
-        imgCarta.classList.add('carta');
-        divCartasJugador.append(imgCarta);
+        crearCarta(carta, 0);
 
         if (puntosJugador > 21) {
 
@@ -162,28 +181,19 @@
         btnPedir.disabled = true;
         btnDetener.disabled = true;
 
-        turnoCroupier(puntosJugador);
+        turnoCroupier(puntosJugadores[0]);
 
     });
 
     btnNuevo.addEventListener('click', () => {
 
-        console.clear(); // limpia la consola
-        deck = [];
-        deck = crearDeck();
-
-        puntosJugador = 0;
-        puntosCroupier = 0;
-
-        puntosHTML[0].innerText = 0;
-        puntosHTML[1].innerText = 0;
-
-        divCartasCroupier.innerHTML = '';
-        divCartasJugador.innerHTML = '';
-
-        btnPedir.disabled = false;
-        btnDetener.disabled = false;
+        inicializarJuego();
 
     });
+
+    // Lo que se ubique en este return va a ser publico
+    return {
+        nuevoJuego: inicializarJuego
+    };
 
 })();
