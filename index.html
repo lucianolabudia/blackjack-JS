@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -11,15 +11,15 @@
 
 <body>
 
-    <header class="titulo">
+    <header class="title">
         Blackjack
     </header>
 
     <div class="row mt-2">
         <div class=" col text-center ">
-            <button id="btnNuevo" class="btn btn-danger ">Nuevo Juego</button>
-            <button id="btnPedir" disabled="disabled" class="btn btn-primary ">Pedir carta</button>
-            <button id="btnDetener" disabled="disabled" class="btn btn-primary ">Detener</button>
+            <button id="btnNew" class="btn btn-danger ">Nuevo Juego</button>
+            <button id="btnOrder" disabled="disabled" class="btn btn-primary ">Pedir carta</button>
+            <button id="btnStop" disabled="disabled" class="btn btn-primary ">Detener</button>
         </div>
     </div>
 
@@ -27,8 +27,8 @@
         <div class="col ">
 
             <h1>Jugador 1 - <small>0</small></h1>
-            <div id="jugador-cartas" class="divCartas">
-                <!--<img class="carta " src="assets/cartas/2C.png ">-->
+            <div id="player-cards" class="divCards">
+                <!--<img class="card " src="assets/cards/2C.png ">-->
             </div>
 
         </div>
@@ -38,8 +38,8 @@
         <div class="col ">
 
             <h1>Croupier - <small>0</small></h1>
-            <div id="croupier-cartas" class="divCartas">
-                <!--<img class="carta " src="assets/cartas/4C.png ">-->
+            <div id="croupier-cards" class="divCards">
+                <!--<img class="card " src="assets/cards/4C.png ">-->
             </div>
 
         </div>
@@ -50,10 +50,10 @@
 
     <script>
         // inicializarJuego();
-        console.log(Modulo);
+        console.log(Module);
 
-        document.querySelector('#btnNuevo').addEventListener('click', () => {
-            Modulo.nuevoJuego();
+        document.querySelector('#btnNew').addEventListener('click', () => {
+            Module.newGame();
         })
     </script>
 

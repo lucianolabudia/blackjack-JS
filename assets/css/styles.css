@@ -5,7 +5,7 @@ body {
     color: white;
 }
 
-.titulo {
+.title {
     text-align: center;
     background-color: black;
     color: white;
@@ -13,14 +13,14 @@ body {
     font-size: 25px;
 }
 
-.carta {
+.card {
     position: relative;
     width: 150px;
     left: 100px;
     margin-left: -75px;
 }
 
-#croupier-cartas,
-#jugador-cartas {
+#croupier-cards,
+#player-cards {
     height: 240px;
 }

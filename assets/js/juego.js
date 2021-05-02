@@ -1,129 +1,111 @@
-// Funcion anonima auto embocada
-const Modulo = (() => {
-    'use strict' // ser estricto al evaluar el codigo
-
+const Module = (() => {
+    'use strict'
 
     let deck = [];
-    const tipos = ['C', 'D', 'H', 'S'],
-        especiales = ['A', 'J', 'Q', 'K'];
+    const types = ['C', 'D', 'H', 'S'],
+        specials = ['A', 'J', 'Q', 'K'];
 
 
-    let puntosJugadores = [];
+    let pointsPlayers = [];
 
-    // Referencias del HTML
-    const btnNuevo = document.querySelector('#btnNuevo'),
-        btnPedir = document.querySelector('#btnPedir'),
-        btnDetener = document.querySelector('#btnDetener');
 
-    const divCartasJugadores = document.querySelectorAll('.divCartas'),
-        puntosHTML = document.querySelectorAll('small');
+    const btnNew = document.querySelector('#btnNew'),
+        btnOrder = document.querySelector('#btnOrder'),
+        btnStop = document.querySelector('#btnStop');
 
-    // Funcion que inicializa el juego
-    const inicializarJuego = (numJugadores = 2) => {
+    const divPlayersCards = document.querySelectorAll('.divCards'),
+        pointsHTML = document.querySelectorAll('small');
 
-        deck = crearDeck();
 
-        puntosJugadores = [];
-        for (let i = 0; i < numJugadores; i++) {
-            puntosJugadores.push(0);
+    const initializeGame = (numberPlayers = 2) => {
+
+        deck = createDeck();
+
+        pointsPlayers = [];
+        for (let i = 0; i < numberPlayers; i++) {
+            pointsPlayers.push(0);
         }
 
-        puntosHTML.forEach(elem => elem.innerText = 0);
-        divCartasJugadores.forEach(elem => elem.innerText = '');
+        pointsHTML.forEach(elem => elem.innerText = 0);
+        divPlayersCards.forEach(elem => elem.innerText = '');
 
-        btnPedir.disabled = false;
-        btnDetener.disabled = false;
+        btnOrder.disabled = false;
+        btnStop.disabled = false;
     }
 
-    // funcion que crea nueva baraja
-    const crearDeck = () => {
+
+    const createDeck = () => {
 
         deck = [];
 
         for (let i = 2; i <= 10; i++) {
 
-            for (let tipo of tipos) {
-                deck.push(i + tipo);
+            for (let type of types) {
+                deck.push(i + type);
             }
 
         }
 
-        for (let tipo of tipos) {
-            for (let esp of especiales) {
-                deck.push(esp + tipo);
+        for (let type of types) {
+            for (let esp of specials) {
+                deck.push(esp + type);
             }
         }
 
-        // muestra las cartas generadas
-        // shuffle de underscore para crear cartas con orden aleatorio
         return _.shuffle(deck);
     }
 
 
 
-    // función que toma una carta
-    const pedirCarta = () => {
+    const orderCard = () => {
 
         if (deck.length === 0) {
-            throw 'No hay cartas en el Mazo'; // "throw" va a mostrar un error en consola
+            throw 'No hay cartas en el Mazo';
         }
 
-        return deck.pop(); // "pop" elimina el ultimo elemento del array
+        return deck.pop();
     }
 
-    // Funcion para darle valores a las cartas
-    const valorCarta = (carta) => {
 
-        // extraer el primer valor del string
-        const valor = carta.substring(0, carta.length - 1); // extrae el valor de la carta
+    const valueCard = (card) => {
 
-        /*
-        let puntos = 0;
-        if (isNaN(valor)) { // evalua si es un numero o no
-            // console.log('No es un numero');
-            puntos = (valor === 'A') ? 11 : 10;
-        } else {
-            // console.log('Es un numero');
-            puntos = valor * 1;
-        }
-        */
+        const value = card.substring(0, card.length - 1);
 
-        // ifelse + corto
-        return (isNaN(valor)) ?
-            (valor === 'A') ? 11 : 10 :
-            valor * 1;
+        return (isNaN(value)) ?
+            (value === 'A') ? 11 : 10 :
+            value * 1;
 
     }
 
-    // Turno: 0 = primer jugador y el ultimo es la pc
-    const acumularPuntos = (carta, turno) => {
 
-        puntosJugadores[turno] = puntosJugadores[turno] + valorCarta(carta);
-        puntosHTML[turno].innerText = puntosJugadores[turno];
-        return puntosJugadores[turno];
+    const accumulatePoints = (card, shift) => {
 
-    }
-
-    const crearCarta = (carta, turno) => {
-
-        const imgCarta = document.createElement('img');
-        imgCarta.src = `assets/cartas/${ carta }.png`; // se crea la carta
-        imgCarta.classList.add('carta');
-        divCartasJugadores[turno].append(imgCarta);
+        pointsPlayers[shift] = pointsPlayers[shift] + valueCard(card);
+        pointsHTML[shift].innerText = pointsPlayers[shift];
+        return pointsPlayers[shift];
 
     }
 
-    const determinarGanador = () => {
+    const createCard = (card, shift) => {
 
-        const [puntosMinimos, puntosCroupier] = puntosJugadores;
+        const imgCard = document.createElement('img');
+        imgCard.src = `assets/cards/${ card }.png`;
+        imgCard.classList.add('card');
+        divPlayersCards[shift].append(imgCard);
+
+    }
+
+    const determineWinner = () => {
+
+        const [minPoints, croupierPoints] = pointsPlayers;
 
         setTimeout(() => {
 
-            if (puntosCroupier === puntosMinimos) {
+            if (croupierPoints === minPoints) {
                 alert('Nadie gana');
-            } else if (puntosMinimos > 21) {
+            } else if (minPoints > 21) {
                 alert('Gano el Croupier');
-            } else if (puntosCroupier > 21) {
+            } else if (croupierPoints > 21) {
                 alert('Ganaste!');
             } else {
                 alert('Gano el Croupier');
@@ -133,67 +115,64 @@ const Modulo = (() => {
 
     }
 
-    // Logica o Turno de la Computadora
-    const turnoCroupier = (puntosMinimos) => {
+    const croupierShift = (minPoints) => {
 
-        let puntosCroupier = 0;
+        let croupierPoints = 0;
 
         do {
 
-            const carta = pedirCarta();
-            puntosCroupier = acumularPuntos(carta, puntosJugadores.length - 1);
-            crearCarta(carta, puntosJugadores.length - 1);
+            const card = orderCard();
+            croupierPoints = accumulatePoints(card, pointsPlayers.length - 1);
+            createCard(card, pointsPlayers.length - 1);
 
 
-        } while ((puntosCroupier < puntosMinimos) && (puntosMinimos <= 21));
+        } while ((croupierPoints < minPoints) && (minPoints <= 21));
 
-        determinarGanador();
+        determineWinner();
     }
 
-    // Eventos
-    btnPedir.addEventListener('click', () => {
 
-        const carta = pedirCarta();
-        const puntosJugador = acumularPuntos(carta, 0);
+    btnOrder.addEventListener('click', () => {
 
-        crearCarta(carta, 0);
+        const card = orderCard();
+        const pointsPlayer = accumulatePoints(card, 0);
 
-        if (puntosJugador > 21) {
+        createCard(card, 0);
+
+        if (pointsPlayer > 21) {
 
             console.warn('Perdiste');
-            btnPedir.disabled = true;
-            btnDetener.disabled = true;
-            turnoCroupier(puntosJugador);
+            btnOrder.disabled = true;
+            btnStop.disabled = true;
+            croupierShift(pointsPlayer);
 
-        } else if (puntosJugador === 21) {
+        } else if (pointsPlayer === 21) {
 
             console.warn('21, genial!');
-            btnPedir.disabled = true;
-            btnDetener.disabled = true;
-            turnoCroupier(puntosJugador);
+            btnOrder.disabled = true;
+            btnStop.disabled = true;
+            croupierShift(pointsPlayer);
         }
 
     });
 
-    btnDetener.addEventListener('click', () => {
+    btnStop.addEventListener('click', () => {
 
-        // bloquea los botones
-        btnPedir.disabled = true;
-        btnDetener.disabled = true;
+        btnOrder.disabled = true;
+        btnStop.disabled = true;
 
-        turnoCroupier(puntosJugadores[0]);
-
-    });
-
-    btnNuevo.addEventListener('click', () => {
-
-        inicializarJuego();
+        croupierShift(pointsPlayers[0]);
 
     });
 
-    // Lo que se ubique en este return va a ser publico
+    btnNew.addEventListener('click', () => {
+
+        initializeGame();
+
+    });
+
     return {
-        nuevoJuego: inicializarJuego
+        newGame: initializeGame
     };
 
 })();
