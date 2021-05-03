@@ -89,7 +89,7 @@ const Module = (() => {
     const createCard = (card, shift) => {
 
         const imgCard = document.createElement('img');
-        imgCard.src = `assets/cards/${ card }.png`;
+        imgCard.src = `assets/img/cards/${ card }.png`;
         imgCard.classList.add('card');
         divPlayersCards[shift].append(imgCard);
 
@@ -164,6 +164,7 @@ const Module = (() => {
         croupierShift(pointsPlayers[0]);
 
     });
+
 
     btnNew.addEventListener('click', () => {
 

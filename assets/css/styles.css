@@ -1,16 +1,44 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:100,300,400,700");
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 html,
 body {
-    margin: 0px;
-    background-color: #2f4f30;
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    max-width: 100%;
+    background-image: url("../img/bg/bg.jpg");
+    background-position: center;
+    background-size: cover;
     color: white;
+    font-family: Lato, sans-serif;
+}
+
+p {
+    color: white;
+    font-size: 50px;
+    text-transform: uppercase;
+    font: 'Lato';
+    position: absolute;
+    right: 50%;
+    top: 5%;
+    transform: translateX(50%) translateY(50%);
 }
 
 .title {
     text-align: center;
-    background-color: black;
     color: white;
     padding: 20px;
-    font-size: 25px;
+    font-size: 80px;
+    font-weight: 900;
+    margin: 20px 0;
 }
 
 .card {
@@ -23,4 +51,5 @@ body {
 #croupier-cards,
 #player-cards {
     height: 240px;
+    display: flex;
 }
